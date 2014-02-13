@@ -1,0 +1,11 @@
+{
+   "debug_enabled": true,
+   "database": {
+   		"host": "",
+        "user": "",
+        "password": "",
+        "database": "",
+        "prefix": "ipb_"
+   },
+   "port": "8080"
+}
