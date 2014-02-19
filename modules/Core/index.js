@@ -32,7 +32,7 @@ function Messenger() {
                 order: "p.notify_sent DESC",
                 limit: "0,30",
                 values: {
-                    name: req.body.member_id
+                    id: req.body.member_id
                 }
             }, function(data) {
                 return API.Utils.makeResponse(200, data, req, res);
