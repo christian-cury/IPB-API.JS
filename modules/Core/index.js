@@ -20,9 +20,6 @@ function Messenger() {
                 message: "User is not logged in."
             }, req, res);
 
-            if (req.method == "GET")
-                req.body = require('url').parse(req.url, true).query;
-
             API.Database.get("inline_notifications", {
                 what: "p.notify_read, p.notify_sent, p.notify_title, j1.members_display_name",
                 where: "p.notify_to_id = :id",
@@ -32,7 +29,7 @@ function Messenger() {
                 order: "p.notify_sent DESC",
                 limit: "0,30",
                 values: {
-                    id: req.body.member_id
+                    id: user.member_id
                 }
             }, function(data) {
                 return API.Utils.makeResponse(200, data, req, res);
