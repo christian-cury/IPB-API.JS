@@ -1,33 +1,44 @@
 /**
-* IPB-API.JS Core Modules
-*
-* @author Paweł "Siper" Klebba <siper@mlppolska.pl>
-* @copyright 2014 MLPPolska.PL
-* @version         $Id$
-* @license MIT License
-* @link http://github.com/MLPPolska/IPB-API.JS
-*/
+ * IPB-API.JS Core Modules
+ *
+ * @author Paweł "Siper" Klebba <siper@mlppolska.pl>
+ * @copyright 2014 MLPPolska.PL
+ * @version         $Id$
+ * @license MIT License
+ * @link http://github.com/MLPPolska/IPB-API.JS
+ */
 
-function Core(){
-   this.Messenger = new Messenger();
-};
+function Core() {
+    this.Messenger = new Messenger();
+}
 
-function Messenger(){
-	this.getNotifications = function(API, req, res) {
+function Messenger() {
+    this.getNotifications = function(API, req, res) {
+        API.Login.getLoginData(req, function(user) {
 
-		API.Database.get("inline_notifications", {
-			what: "p.notify_read, p.notify_sent, p.notify_title, j1.members_display_name",
-			where: "p.notify_to_id = 472",
-			join: {
-				members: "p.notify_from_id = j1.member_id"
-			},
-			order: "p.notify_sent DESC",
-			limit: "0,30"
-		}, function(data){
-			return API.Utils.makeResponse(200, data, req, res);
-		});
+            if (!user) return API.Utils.makeResponse(403, {
+                message: "User is not logged in."
+            }, req, res);
 
-	};
-};
+            if (req.method == "GET")
+                req.body = require('url').parse(req.url, true).query;
 
-module.exports = new Core;
+            API.Database.get("inline_notifications", {
+                what: "p.notify_read, p.notify_sent, p.notify_title, j1.members_display_name",
+                where: "p.notify_to_id = :id",
+                join: {
+                    members: "p.notify_from_id = j1.member_id"
+                },
+                order: "p.notify_sent DESC",
+                limit: "0,30",
+                values: {
+                    name: req.body.member_id
+                }
+            }, function(data) {
+                return API.Utils.makeResponse(200, data, req, res);
+            });
+        });
+    };
+}
+
+module.exports = new Core();

@@ -9,6 +9,12 @@
         "mysql": ">= 2.0.0-rc2",
         "crypto" : "*"
     },
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "grunt-contrib-jshint": "~0.6.3",
+        "grunt-contrib-nodeunit": "~0.2.0",
+        "grunt-jsbeautifier": "~0.2.6"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/MLPPolska/IPB-API.JS.git"
